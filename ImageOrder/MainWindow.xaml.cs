@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,9 @@ namespace ImageOrder
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+        InputFileList files = new InputFileList();
+        InputFileList exportFiles = new InputFileList();
+
         public MainWindow()
         {
             InitializeComponent( );
@@ -39,17 +42,13 @@ namespace ImageOrder
             }
             else
             {
-                List<ListItemFiles> files = new List<ListItemFiles>();
-                List<ListItemFiles> exportFiles = new List<ListItemFiles>();
+
 
                 string[] filePaths = Directory.GetFiles(dialog.SelectedPath, "*.jpg");
                 foreach (string filePath in filePaths)
                 {
                     files.Add(new ListItemFiles() { filePath = filePath });
                 }
-
-                sliderInsert.Maximum = files.Count;
-                lbFiles.ItemsSource = files;
             }
         }
 
@@ -58,11 +57,60 @@ namespace ImageOrder
             var dialog = new System.Windows.Forms.OpenFileDialog();
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();
         }
+
+        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                exportFiles.Remove(exportFiles[lbExport.SelectedIndex]);
+            }
+            catch
+            { 
+                
+            }
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                exportFiles.Add(files[lbFiles.SelectedIndex]);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void btnRemoveAll_Click(object sender, RoutedEventArgs e)
+        {
+            for (var index = 0; index >= exportFiles.Count; index++ )
+            {
+                exportFiles.RemoveAt(index);
+            }
+            
+        }
+
+        private void btnAddAll_Click(object sender, RoutedEventArgs e)
+        {
+            exportFiles = files;
+        }
     }
 
     public class ListItemFiles
     {
         public string filePath { get; set; }
+    }
+
+    public class InputFileList : ObservableCollection<ListItemFiles>
+    {
+
+
+    }
+
+    public class OutputFileList : ObservableCollection<ListItemFiles>
+    {
+
     }
 
     public class DoubleToStringConverter : IValueConverter
