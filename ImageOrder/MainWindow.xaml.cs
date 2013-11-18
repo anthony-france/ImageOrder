@@ -40,6 +40,8 @@ namespace ImageOrder
             else
             {
                 List<ListItemFiles> files = new List<ListItemFiles>();
+                List<ListItemFiles> exportFiles = new List<ListItemFiles>();
+
                 string[] filePaths = Directory.GetFiles(dialog.SelectedPath, "*.jpg");
                 foreach (string filePath in filePaths)
                 {
