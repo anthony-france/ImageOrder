@@ -2,7 +2,8 @@
         xmlns:local="clr-namespace:ImageOrder"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="450" Width="672" Loaded="Window_Loaded" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" ResizeMode="CanMinimize">
+        MouseMove="Window_MouseMove"
+        Title="Image Order" Height="450" Width="672" Loaded="Window_Loaded" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" ResizeMode="CanMinimize">
     <Window.Resources>
         <ResourceDictionary>
             <local:DoubleToStringConverter x:Key="DoubleToStringConverter" />
@@ -21,7 +22,7 @@
                 <ColumnDefinition Width="300"/>                  
             </Grid.ColumnDefinitions>
 
-            <ListBox Grid.Column="0" x:Name="lbFiles" HorizontalContentAlignment="Stretch" Margin="0,10" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Source={StaticResource InputFileListData}}">
+            <ListBox Grid.Column="0" x:Name="lbFiles" HorizontalContentAlignment="Stretch" Margin="0,10" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Path=files}" PreviewMouseLeftButtonDown="lbFiles_PreviewMouseLeftButtonDown" PreviewMouseDoubleClick="lbFiles_PreviewMouseDoubleClick">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0,2">
@@ -29,7 +30,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="0"  Height="100" Width="190" Source="{Binding filePath}" />
+                            <Image Grid.Column="0"  Height="50" Width="80" Source="{Binding fullPath}" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -42,7 +43,18 @@
                 <Button x:Name="btnRemoveAll" Margin="3,15,3,0" Height="25" Content="RA" Click="btnRemoveAll_Click" />
             </StackPanel>
 
-            <ListBox Grid.Column="2" x:Name="lbExport" HorizontalContentAlignment="Stretch" Margin="0,10" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Source={StaticResource OutputFileListData}}">
+            <ListBox Grid.Column="2" AllowDrop="True" DragEnter="lbExport_DragEnter" DragOver="lbExport_DragEnter" Drop="lbExport_Drop" x:Name="lbExport" HorizontalContentAlignment="Stretch" Margin="0,10" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Path=exportFiles}" PreviewMouseDoubleClick="lbExport_PreviewMouseDoubleClick">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Remove" Click="MenuItem_Click_Remove"/>
+                        <MenuItem Header="Send to Top" Click="MenuItem_Click_MoveTop" />
+                        <MenuItem Header="Move Up" Click="MenuItem_Click_MoveUp" />
+                        <MenuItem Header="Move Down" Click="MenuItem_Click_MoveDown" />
+                        <MenuItem Header="Send to Bottom" Click="MenuItem_Click_MoveBottom" />
+                        <MenuItem Header="Weave This File" Click="MenuItem_Click_Weave"/>
+                        <MenuItem Header="Save" Click="MenuItem_Click_Save"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0,2">
@@ -50,7 +62,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="0"  Height="100" Width="190" Source="{Binding filePath}" />
+                            <Image Grid.Column="0"  Height="50" Width="80" Source="{Binding fullPath}" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
