@@ -226,9 +226,10 @@ namespace ImageOrder
         {
             try
             {
+                var pos = lbExport.SelectedIndex - 1;
                 ListItemFiles selectedItem = exportFiles[lbExport.SelectedIndex];
                 exportFiles.Remove(selectedItem);
-                exportFiles.Insert(lbExport.SelectedIndex - 2, selectedItem);
+                exportFiles.Insert(pos, selectedItem);
             }
             catch { }
         }
@@ -239,7 +240,7 @@ namespace ImageOrder
             {
                 ListItemFiles selectedItem = exportFiles[lbExport.SelectedIndex];
                 exportFiles.Remove(selectedItem);
-                exportFiles.Insert(lbExport.SelectedIndex + 2, selectedItem);
+                exportFiles.Insert(lbExport.SelectedIndex + 1, selectedItem);
             }
             catch { }
             
@@ -266,6 +267,31 @@ namespace ImageOrder
             }
             catch { }
 
+        }
+
+        private void MenuItem_Click_Add(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dialog = new System.Windows.Forms.OpenFileDialog();
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    files.Add(new ListItemFiles() { File = new FileInfo(dialog.FileName), fullPath = dialog.FileName });
+                }
+            }
+            catch { }
+        }
+
+        private void MenuItem_Click_Insert(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                exportFiles.Add(files[lbFiles.SelectedIndex]);
+            }
+            catch
+            {
+            }
         }
     }
 
